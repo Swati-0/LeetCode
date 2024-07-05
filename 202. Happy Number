@@ -1,0 +1,17 @@
+class Solution {
+public:
+    bool isHappy(int n) {
+        if(n==1 || n==7)
+        return true;
+        if((n>1 && n<7) || n==8 || n==9)
+        return false;
+        int r;
+        int digit=0,sum=n;
+        while(sum>0){
+            r=sum%10;
+            digit=digit + (r*r);
+            sum=sum/10;
+        }
+            return isHappy(digit);
+    }
+};
