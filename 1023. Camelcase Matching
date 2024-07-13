@@ -1,0 +1,25 @@
+class Solution {
+public:
+    vector<bool> camelMatch(vector<string>& queries, string pattern) {
+        int n=queries.size();
+        int m=pattern.size();
+        vector<bool>ans;
+        for(int i=0; i<n; i++){
+            int j=0;
+            for(int k=0; k<queries[i].size(); k++){
+                if(queries[i][k]==pattern[j] && j<m)
+                j++;
+                else if(queries[i][k]>='A' && queries[i][k]<='Z'){
+                    ans.push_back(false);
+                    break;
+                }if(k==queries[i].size()-1){
+                    if(j==m)
+                    ans.push_back(true);
+                    else
+                    ans.push_back(false);
+                }
+            }
+        }
+        return ans;
+    }
+};
