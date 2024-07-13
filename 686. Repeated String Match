@@ -1,0 +1,36 @@
+class Solution {
+public:
+bool check(string &a, string &b){
+    int x=a.length();
+    int y=b.length();
+    for(int i=0; i<=x-y; i++){
+        int j;
+            for(j=0; j<y; j++){
+                if(a[i+j]!=b[j])
+                break;
+            }
+            if(j==y)
+            return true;
+        }
+        return false;
+    }
+    int repeatedStringMatch(string a, string b) {
+        string c=a;
+        int x=a.length();
+        int y=b.length();
+        int cnt=1;
+        while(x<y){
+            cnt++;
+            a.append(c);
+            x=a.length();
+        }
+        if(check(a,b))
+        return cnt;
+        a.append(c);
+        if(check(a,b))
+        return cnt+1;
+
+        return -1;
+    }
+
+};
