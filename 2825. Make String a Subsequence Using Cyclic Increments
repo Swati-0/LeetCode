@@ -1,0 +1,17 @@
+class Solution {
+public:
+    bool canMakeSubsequence(string str1, string str2) {
+        int srclen=str1.length();
+        int tgtlen=str2.length();        
+        int srcidx=0,tgtidx=0;
+        while(srcidx<srclen && tgtidx<tgtlen){
+            if(str1[srcidx]==str2[tgtidx] || str1[srcidx]+1==str2[tgtidx] || (str1[srcidx]=='z' && str2[tgtidx]=='a')){
+                srcidx++;
+                tgtidx++;
+            }else{
+                srcidx++;
+            }            
+        }
+        return tgtidx==tgtlen;
+    }
+};
