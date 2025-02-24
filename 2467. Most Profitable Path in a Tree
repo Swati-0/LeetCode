@@ -1,0 +1,54 @@
+class Solution {
+public:
+     int mostProfitablePath(vector<vector<int>>& edges, int bob, vector<int>& amount) {
+        int n = amount.size();
+        vector<vector<int>> tree(n);
+        for (auto& edge : edges) {
+            tree[edge[0]].push_back(edge[1]);
+            tree[edge[1]].push_back(edge[0]);
+        }
+        
+        vector<int> bobTime(n, INT_MAX);
+        findBobPath(tree, bob, 0, -1, 0, bobTime);
+        
+        int maxProfit = INT_MIN;
+        findAliceMaxProfit(tree, 0, -1, 0, 0, bobTime, amount, maxProfit);
+        
+        return maxProfit;
+    }
+    
+private:
+    bool findBobPath(vector<vector<int>>& tree, int node, int target, int parent, int time, vector<int>& bobTime) {
+        if (node == target) {
+            bobTime[node] = time;
+            return true;
+        }
+        for (int neighbor : tree[node]) {
+            if (neighbor != parent && findBobPath(tree, neighbor, target, node, time + 1, bobTime)) {
+                bobTime[node] = time;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    void findAliceMaxProfit(vector<vector<int>>& tree, int node, int parent, int time, int currentProfit, vector<int>& bobTime, vector<int>& amount, int& maxProfit) {
+        if (time < bobTime[node]) {
+            currentProfit += amount[node];
+        } else if (time == bobTime[node]) {
+            currentProfit += amount[node] / 2;
+        }
+        
+        bool isLeaf = true;
+        for (int neighbor : tree[node]) {
+            if (neighbor != parent) {
+                isLeaf = false;
+                findAliceMaxProfit(tree, neighbor, node, time + 1, currentProfit, bobTime, amount, maxProfit);
+            }
+        }
+        
+        if (isLeaf) {
+            maxProfit = max(maxProfit, currentProfit);
+        }
+    }
+};
