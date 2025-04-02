@@ -1,0 +1,16 @@
+class Solution {
+public:
+    long long mem(vector<vector<int>>& q, int i, unordered_map<int, long long>& m) {
+    if (i >= q.size()) return 0;
+    if (m.find(i) != m.end()) return m[i];
+    
+    long long s = q[i][0] + mem(q, i + q[i][1] + 1, m);
+    long long sk = mem(q, i + 1, m);
+    
+    return m[i] = max(s, sk);
+}
+    long long mostPoints(vector<vector<int>>& questions) {
+        unordered_map<int, long long> m;
+        return mem(questions, 0, m);
+    }
+};
