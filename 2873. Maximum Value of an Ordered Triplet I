@@ -1,0 +1,19 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+#include <algorithm>
+
+class Solution {
+public:
+    long long maximumTripletValue(vector<int>& nums) {
+        long long maxvalue=0;
+        long long maxi=nums[0];
+        long long maxdiff=INT_MIN;
+        for(int j=1; j<nums.size()-1; j++){
+            maxdiff=max(maxdiff,(long long)maxi-nums[j]);
+            maxvalue=max(maxvalue,nums[j+1]*maxdiff);
+            maxi=max(maxi,(long long)nums[j]);
+        }
+        return maxvalue;
+    }
+};
