@@ -1,0 +1,62 @@
+class Solution {
+public:
+    class BIT {
+    public:
+        vector<int> tree;
+        int size;
+
+        BIT(int n) {
+            size = n + 2;
+            tree.resize(size, 0);
+        }
+
+        void update(int i, int delta) {
+            i++;
+            while (i < size) {
+                tree[i] += delta;
+                i += i & -i;
+            }
+        }
+
+        int query(int i) {
+            i++;
+            int res = 0;
+            while (i > 0) {
+                res += tree[i];
+                i -= i & -i;
+            }
+            return res;
+        }
+    };
+    
+    long long goodTriplets(vector<int>& nums1, vector<int>& nums2) {
+        int n = nums1.size();
+        vector<int> pos(n);  // pos[val] = index of val in nums2
+        for (int i = 0; i < n; ++i) {
+            pos[nums2[i]] = i;
+        }
+
+        vector<int> mapped(n);
+        for (int i = 0; i < n; ++i) {
+            mapped[i] = pos[nums1[i]];
+        }
+
+        BIT leftBIT(n), rightBIT(n);
+        vector<int> rightGreater(n, 0);
+
+        // Count rightGreater[i]: number of elements after i that are greater
+        for (int i = n - 1; i >= 0; --i) {
+            rightGreater[i] = rightBIT.query(n - 1) - rightBIT.query(mapped[i]);
+            rightBIT.update(mapped[i], 1);
+        }
+
+        long long result = 0;
+        for (int i = 0; i < n; ++i) {
+            int leftLess = leftBIT.query(mapped[i] - 1);
+            result += (long long)leftLess * rightGreater[i];
+            leftBIT.update(mapped[i], 1);
+        }
+
+        return result;
+    }
+};
