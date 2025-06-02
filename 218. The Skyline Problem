@@ -1,0 +1,42 @@
+class Solution {
+public:
+    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
+        vector<pair<int, int>> events;
+
+        // Step 1: Convert buildings to events
+        for (const auto& b : buildings) {
+            events.emplace_back(b[0], -b[2]); // entering: negative height
+            events.emplace_back(b[1], b[2]);  // exiting: positive height
+        }
+
+        // Step 2: Sort events
+        sort(events.begin(), events.end(), [](pair<int, int>& a, pair<int, int>& b) {
+            if (a.first != b.first)
+                return a.first < b.first;
+            return a.second < b.second;
+        });
+
+        // Step 3: Max Heap to track current heights
+        multiset<int> heights = {0}; // contains active building heights
+        int prevMaxHeight = 0;
+        vector<vector<int>> result;
+
+        for (auto& [x, h] : events) {
+            if (h < 0) {
+                // Start of building, insert height
+                heights.insert(-h);
+            } else {
+                // End of building, remove height
+                heights.erase(heights.find(h));
+            }
+
+            int currMaxHeight = *heights.rbegin(); // max height now
+            if (currMaxHeight != prevMaxHeight) {
+                result.push_back({x, currMaxHeight});
+                prevMaxHeight = currMaxHeight;
+            }
+        }
+
+        return result;
+    }
+};
